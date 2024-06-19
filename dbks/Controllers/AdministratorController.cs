@@ -11,7 +11,46 @@ namespace dbks.Controllers
         {
             return View();
         }
-        public IActionResult AdministratorUser(Administrator admin)
+
+        public async Task<IActionResult> AdministratorUser(string searchString)
+        {
+            using (var context = new DbksContext())
+            {
+                var employees = from e in context.Employees
+                                select e;
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    employees = employees.Where(s => s.Name.Contains(searchString) );
+                }
+
+                return View(await employees.ToListAsync());
+            }
+        }
+        public async Task<IActionResult> AdministratorUser1(string searchString)
+        {
+            using (var context = new DbksContext())
+            {
+                var employees = from e in context.Employees
+                                select e;
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    employees = employees.Where(s => s.Name.Contains(searchString));
+                }
+
+                return View(await employees.ToListAsync());
+            }
+        }
+        public IActionResult AdministratorUser2()
+        {
+            return View();
+        }
+        public IActionResult AdministratorUser3()
+        {
+            return View();
+        }
+        public IActionResult LoginUser(Administrator admin)
         {
             using (var db = new DbksContext())
             {
@@ -26,7 +65,7 @@ namespace dbks.Controllers
                     ViewData["Message"] = "用户名或密码错误";
                 }
             }
-            return View("Login");
+            return View();
         }
 
     }
