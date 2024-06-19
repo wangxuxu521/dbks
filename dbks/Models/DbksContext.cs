@@ -28,7 +28,7 @@ public partial class DbksContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("persist security info=True;data source=192.168.1.106;port=3306;initial catalog=dbks;user id=test1;password=123456;character set=utf8;allow zero datetime=true;convert zero datetime=true;pooling=true;maximumpoolsize=3000", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.42-mysql"));
+        => optionsBuilder.UseMySql("persist security info=True;data source=localhost;port=3306;initial catalog=dbks;user id=root;password=tfzz5255;character set=utf8;allow zero datetime=true;convert zero datetime=true;pooling=true;maximumpoolsize=3000", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.42-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -42,8 +42,8 @@ public partial class DbksContext : DbContext
 
             entity.ToTable("administrator");
 
-            entity.Property(e => e.Administratorid).HasMaxLength(30);
-            entity.Property(e => e.Administratorname).HasMaxLength(30);
+            entity.Property(e => e.Administratorid).HasMaxLength(20);
+            entity.Property(e => e.Administratorname).HasMaxLength(20);
         });
 
         modelBuilder.Entity<Department>(entity =>

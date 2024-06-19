@@ -2,6 +2,7 @@
 using System;
 using dbks.Models;
 using dbks.Controllers;
+using Microsoft.EntityFrameworkCore;
 namespace dbks.Controllers
 {
     public class AdministratorController: Controller    
@@ -10,33 +11,26 @@ namespace dbks.Controllers
         {
             return View();
         }
-        public IActionResult AdministratorUser()
+        public IActionResult AdministratorUser(Administrator admin)
         {
-            return View();
-        }
-        public IActionResult LoginUser(Administrator model)
-        {
-            using(var db = new DbksContext())
+            using (var db = new DbksContext())
             {
-                var admin = db.Administrators.Find(model.Administratorname);
-                if(admin == null)
+                var User = db.Administrators.Find(admin.Administratorid);
+                if (admin.Administratorname == User.Administratorname && admin.Administratorid == User.Administratorid) // Example check
                 {
-                    ViewData["Message"] = "Invalid User Name or Password";
-                    return RedirectToAction("Administrator", "Administrator");
+                    ViewData["Message"] = "登录成功";
+                    return RedirectToAction("AdministratorUser", "Administrator"); // Redirect on successful login
                 }
-                if(model.Administratorid== admin.Administratorid)
+                else
                 {
-                    return RedirectToAction("AdministratorUser", "Administrator");
-                }
-                else 
-                {
-                    ViewData["Message"] = "Invalid User Name or Password";
-                    return RedirectToAction("Administrator", "Administrator");
+                    ViewData["Message"] = "用户名或密码错误";
                 }
             }
-
+            return View("Login");
         }
 
     }
 
-}
+                
+ }
+
