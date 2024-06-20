@@ -1,0 +1,166 @@
+﻿@model Employee
+
+<h2>添加新员工</h2>
+
+<form asp-action="AddEmployee" method="post" onsubmit="return validateForm(event)">
+    <div class="form-group">
+        <label asp-for="EmployeeId">EmployeeId</label>
+        <input asp-for="EmployeeId" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Name">姓名</label>
+        <input asp-for="Name" class="form-control" />
+        <span class="text-danger" id="nameError"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Idnumber">身份证号</label>
+        <input asp-for="Idnumber" class="form-control" />
+         <span class="text-danger" id="idnumberError"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Age">年龄</label>
+        <input asp-for="Age" class="form-control" />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Gender">性别</label>
+         <select asp-for="Gender" class="form-control">
+            <option value=""> </option> <!-- 默认选项，没有值 -->
+            <option value="男">男</option>
+            <option value="女">女</option>
+         </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Phone">电话</label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email">电子邮件</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Address">地址</label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FamilyInfo">家庭信息</label>
+        <input asp-for="FamilyInfo" class="form-control" />
+        <span asp-validation-for="FamilyInfo" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DeptId">部门ID</label>
+        <input asp-for="DeptId" class="form-control" />
+       <span class="text-danger" id="deptIdError"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PositionId">职位</label>
+        <select asp-for="PositionId" class="form-control">
+            <option value="">请选择职位</option> <!-- 默认选项 -->
+            @foreach (var position in ViewBag.Positions as List<Position>)
+            {
+            <option value="@position.PositionId">@position.PositionId</option>
+            }
+        </select>
+        <span class="text-danger" id="positionIdError"></span>
+    </div>
+    <div class="form-group">
+          <label asp-for="SalaryId">薪资卡号</label>
+             <input asp-for="SalaryId" class="form-control" />
+             <span class="text-danger" id="salaryIdError"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="OnJob">工作状态</label>
+            <select asp-for="OnJob" class="form-control">
+            <option value=""> </option> <!-- 默认选项，没有值 -->
+            <option value="在职">在职</option>
+            <option value="请假">请假</option>
+            <option value="离职">离职</option>
+         </select>
+         <span class="text-danger" id="onJobError"></span>
+    </div>
+    
+    <div style="text-align: center; margin-top: 20px;"> 
+        <button type="submit" class="btn btn-primary">添加</button>
+        <button type="button" class="btn btn-primary"onclick="history.back()">返回</button>
+   </div>
+</form>
+
+
+<script>
+    function validateForm(event) {
+        event.preventDefault(); // 阻止默认的表单提交行为
+        var isValid = true;
+
+        var name = document.getElementById('Name').value;
+        if (!name) {
+            document.getElementById('nameError').textContent = '姓名不能为空';
+            isValid = false;
+        } else {
+            document.getElementById('nameError').textContent = '';
+        }
+
+        // 验证身份证号
+        var idnumber = document.getElementById('Idnumber').value;
+        if (!idnumber) {
+            document.getElementById('idnumberError').textContent = '身份证号不能为空';
+            isValid = false;
+        } else {
+            document.getElementById('idnumberError').textContent = '';
+        }
+
+        // 验证部门ID
+        var deptId = document.getElementById('DeptId').value;
+        if (!deptId) {
+            document.getElementById('deptIdError').textContent = '部门ID不能为空';
+            isValid = false;
+        } else {
+            document.getElementById('deptIdError').textContent = '';
+        }
+
+        // 验证职位
+        var positionId = document.getElementById('PositionId').value;
+        if (!positionId) {
+            document.getElementById('positionIdError').textContent = '职位不能为空';
+            isValid = false;
+        } else {
+            document.getElementById('positionIdError').textContent = '';
+        }
+
+        // 验证薪资账号
+        var salaryId = document.getElementById('SalaryId').value;
+        if (!salaryId) {
+            document.getElementById('salaryIdError').textContent = '薪资账号不能为空';
+            isValid = false;
+        } else {
+            document.getElementById('salaryIdError').textContent = '';
+        }
+
+        // 验证工作状态
+        var onJob = document.getElementById('OnJob').value;
+        if (!onJob) {
+            document.getElementById('onJobError').textContent = '工作状态不能为空';
+            isValid = false;
+        } else {
+            document.getElementById('onJobError').textContent = '';
+        }
+
+        if (!isValid) {
+            // 如果验证失败，不执行任何操作，保留用户输入
+            // 如果验证失败，提示用户还有哪些必填信息没有填入
+            alert('请填写以下必填信息：\n' +
+                  (name ? '' : '姓名\n') +
+                  (idnumber ? '' : '身份证号\n') +
+                  (deptId ? '' : '部门ID\n') +
+                  (positionId ? '' : '职位\n') +
+                  (salaryId ? '' : '薪资账号\n') +
+                  (onJob ? '' : '工作状态\n'));
+        } else {
+            // 如果验证通过，手动提交表单
+            document.querySelector('form').submit();
+        }
+    }
+</script>

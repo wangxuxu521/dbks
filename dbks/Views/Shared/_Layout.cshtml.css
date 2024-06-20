@@ -46,3 +46,8 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+.content {
+    width: 80%;
+    margin: 0 auto;
+    /* 其他样式属性 */
+}

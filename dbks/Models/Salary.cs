@@ -7,9 +7,7 @@ public partial class Salary
 {
     public string SalaryId { get; set; } = null!;
 
-    public string? EmployeeId { get; set; }
-
-    public decimal? NetSalary { get; set; }
+    public decimal? Salary1 { get; set; }
 
     public decimal? BasicSalary { get; set; }
 
@@ -18,4 +16,6 @@ public partial class Salary
     public decimal? Bonus { get; set; }
 
     public DateTime? PayDate { get; set; }
+
+    public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 }

@@ -1,0 +1,90 @@
+﻿@model Employee
+
+<h2>修改员工信息</h2>
+
+<form asp-action="AdminEdit" method="post">
+    <div class="form-group">
+        <label asp-for="EmployeeId">EmployeeId</label>
+        <input asp-for="EmployeeId" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="Name">姓名</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Idnumber">身份证号</label>
+        <input asp-for="Idnumber" class="form-control" />
+        <span asp-validation-for="Idnumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Age">年龄</label>
+        <input asp-for="Age" class="form-control" />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Gender">性别</label>
+        <select asp-for="Gender" class="form-control">
+            <option value=""> </option> <!-- 默认选项，没有值 -->
+            <option value="男">男</option>
+            <option value="女">女</option>
+        </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Phone">电话</label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email">电子邮件</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Address">地址</label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FamilyInfo">家庭信息</label>
+        <input asp-for="FamilyInfo" class="form-control" />
+        <span asp-validation-for="FamilyInfo" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DeptId">部门ID</label>
+        <input asp-for="DeptId" class="form-control" />
+        <span asp-validation-for="DeptId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PositionId">职位</label>
+        <select asp-for="PositionId" class="form-control">
+            <option value="">请选择职位</option> <!-- 默认选项 -->
+            @foreach (var position in ViewBag.Positions as List<Position>)
+            {
+                    <option value="@position.PositionId">@position.PositionName</option>
+            }
+        </select>
+        <span asp-validation-for="PositionId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SalaryId">薪资卡号</label>
+        <input asp-for="SalaryId" class="form-control" />
+        <span asp-validation-for="SalaryId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="OnJob">工作状态</label>
+        <select asp-for="OnJob" class="form-control">
+            <option value=""> </option> <!-- 默认选项，没有值 -->
+            <option value="在职">在职</option>
+            <option value="请假">请假</option>
+            <option value="离职">离职</option>
+        </select>
+        <span asp-validation-for="OnJob" class="text-danger"></span>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <button type="submit" class="btn btn-primary">保存修改</button>
+        <button type="button" class="btn btn-primary" onclick="history.back()">取消</button>
+    </div>
+</form>

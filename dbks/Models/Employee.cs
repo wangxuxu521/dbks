@@ -29,7 +29,11 @@ public partial class Employee
 
     public string? SalaryId { get; set; }
 
-    public string? Salary { get; set; }
-
     public string? OnJob { get; set; }
+
+    public virtual Department? Dept { get; set; }
+
+    public virtual Position? Position { get; set; }
+
+    public virtual Salary? Salary { get; set; }
 }
