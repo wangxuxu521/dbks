@@ -3,6 +3,10 @@ using System;
 using dbks.Models;
 using dbks.Controllers;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
+
+
 namespace dbks.Controllers
 {
     public class AdministratorController: Controller    
@@ -146,10 +150,7 @@ namespace dbks.Controllers
             ViewBag.Departments = _dbContext.Departments.ToList();
             return View(updatedEmployee);
         }
-        public IActionResult AdministratorUser3()
-        {
-            return View();
-        }
+
         public IActionResult LoginUser(Administrator admin)
         {
             using (var db = new DbksContext())
@@ -174,6 +175,21 @@ namespace dbks.Controllers
             return View();
         }
 
+        public async Task<IActionResult> AdministratorUser3(string searchString)
+        {
+            using (var context = new DbksContext())
+            {
+                var employees = from a in context.Employees
+                                     select a;
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    employees = employees.Where(s => s.Name.Contains(searchString));
+                }
+
+                return View(await employees.ToListAsync());
+            }
+        }
     }
 
                 
