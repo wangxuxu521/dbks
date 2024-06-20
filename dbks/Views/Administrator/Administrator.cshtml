@@ -60,8 +60,8 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>登录</h2>
-        <h3>@ViewData["Message"]</h3>
+        <h2></h2>
+
         <form action="/Administrator/LoginUser" method="post">
             <div class="form-group">
                 <label asp-for="Administratorname" class="control-label"></label>
@@ -72,10 +72,19 @@
                 <label asp-for="Administratorid" class="control-label"></label>
                 <input asp-for="Administratorid" type="password" class="form-control" />
                 <span asp-validation-for="Administratorid" class="error"></span>
+                @if (ViewData["Message"] != null)
+                {
+                    <div style="color: red;">
+                        @ViewData["Message"]
+                    </div>
+                }
             </div>
             <button type="submit" class="btn btn-custom btn-block">登录</button>
             <div>
                 <span asp-validation-summary="All" class="error"></span>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="@Url.Action("Main", "Home")">返回首页</a>
             </div>
         </form>
     </div>

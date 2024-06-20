@@ -22,8 +22,6 @@ public partial class DbksContext : DbContext
 
     public virtual DbSet<Employee> Employees { get; set; }
 
-    public virtual DbSet<Position> Positions { get; set; }
-
     public virtual DbSet<Salary> Salaries { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -33,14 +31,17 @@ public partial class DbksContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
-            .UseCollation("latin1_swedish_ci")
-            .HasCharSet("latin1");
+            .UseCollation("utf8mb4_unicode_ci")
+            .HasCharSet("utf8mb4");
 
         modelBuilder.Entity<Administrator>(entity =>
         {
             entity.HasKey(e => e.Administratorid).HasName("PRIMARY");
 
-            entity.ToTable("administrator");
+            entity
+                .ToTable("administrator")
+                .HasCharSet("utf8")
+                .UseCollation("utf8_general_ci");
 
             entity.Property(e => e.Administratorid).HasMaxLength(20);
             entity.Property(e => e.Administratorname).HasMaxLength(20);
@@ -48,21 +49,37 @@ public partial class DbksContext : DbContext
 
         modelBuilder.Entity<Department>(entity =>
         {
-            entity.HasKey(e => e.DeptId).HasName("PRIMARY");
+            entity.HasKey(e => new { e.DeptId, e.PositionId })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
-            entity.ToTable("department");
+            entity
+                .ToTable("department")
+                .HasCharSet("utf8")
+                .UseCollation("utf8_general_ci");
 
             entity.Property(e => e.DeptId)
                 .HasMaxLength(20)
                 .HasColumnName("DeptID");
+            entity.Property(e => e.PositionId)
+                .HasMaxLength(20)
+                .HasColumnName("PositionID");
             entity.Property(e => e.DeptName).HasMaxLength(20);
+            entity.Property(e => e.PositionName).HasMaxLength(20);
         });
 
         modelBuilder.Entity<Employee>(entity =>
         {
             entity.HasKey(e => e.EmployeeId).HasName("PRIMARY");
 
-            entity.ToTable("employee");
+            entity
+                .ToTable("employee")
+                .HasCharSet("utf8")
+                .UseCollation("utf8_general_ci");
+
+            entity.HasIndex(e => new { e.DeptId, e.PositionId }, "E_DaptandPosit");
+
+            entity.HasIndex(e => e.SalaryId, "E_Salary");
 
             entity.Property(e => e.EmployeeId)
                 .HasMaxLength(20)
@@ -74,57 +91,53 @@ public partial class DbksContext : DbContext
                 .HasColumnName("DeptID");
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FamilyInfo).HasColumnType("tinytext");
-            entity.Property(e => e.Gender).HasMaxLength(10);
+            entity.Property(e => e.Gender).HasMaxLength(100);
             entity.Property(e => e.Idnumber)
                 .HasMaxLength(20)
                 .HasColumnName("IDNumber");
             entity.Property(e => e.Name).HasMaxLength(30);
-            entity.Property(e => e.OnJob).HasMaxLength(10);
+            entity.Property(e => e.OnJob).HasColumnType("enum('’在职‘','’离职‘','’请假‘')");
             entity.Property(e => e.Phone).HasMaxLength(20);
             entity.Property(e => e.PositionId)
                 .HasMaxLength(20)
                 .HasColumnName("PositionID");
-            entity.Property(e => e.Salary).HasMaxLength(20);
             entity.Property(e => e.SalaryId)
                 .HasMaxLength(20)
                 .HasColumnName("SalaryID");
-        });
 
-        modelBuilder.Entity<Position>(entity =>
-        {
-            entity.HasKey(e => e.PositionId).HasName("PRIMARY");
+            entity.HasOne(d => d.Salary).WithMany(p => p.Employees)
+                .HasForeignKey(d => d.SalaryId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("E_Salary");
 
-            entity.ToTable("position");
-
-            entity.Property(e => e.PositionId)
-                .HasMaxLength(20)
-                .HasColumnName("PositionID");
-            entity.Property(e => e.PositionName).HasMaxLength(20);
+            entity.HasOne(d => d.Department).WithMany(p => p.Employees)
+                .HasForeignKey(d => new { d.DeptId, d.PositionId })
+                .HasConstraintName("E_DaptandPosit");
         });
 
         modelBuilder.Entity<Salary>(entity =>
         {
             entity.HasKey(e => e.SalaryId).HasName("PRIMARY");
 
-            entity.ToTable("salary");
+            entity
+                .ToTable("salary")
+                .HasCharSet("utf8")
+                .UseCollation("utf8_general_ci");
 
             entity.Property(e => e.SalaryId)
                 .HasMaxLength(20)
                 .HasColumnName("SalaryID");
             entity.Property(e => e.BasicSalary)
                 .HasPrecision(10)
-                .HasColumnName("Basic salary");
+                .HasColumnName("Basic_salary");
             entity.Property(e => e.Bonus).HasPrecision(10);
-            entity.Property(e => e.EmployeeId)
-                .HasMaxLength(20)
-                .HasColumnName("EmployeeID");
-            entity.Property(e => e.NetSalary)
-                .HasPrecision(10)
-                .HasColumnName("Net Salary");
             entity.Property(e => e.PayDate).HasColumnType("datetime");
             entity.Property(e => e.PersonalIncome)
                 .HasPrecision(10)
-                .HasColumnName("Personal income");
+                .HasColumnName("Personal_income");
+            entity.Property(e => e.Salary1)
+                .HasPrecision(10)
+                .HasColumnName("Salary");
         });
 
         OnModelCreatingPartial(modelBuilder);
