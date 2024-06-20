@@ -7,6 +7,7 @@
 <head>
     <!-- 其他头部内容 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <style >
 body {
@@ -145,6 +146,63 @@ tr:hover {
     justify-content: center;
     margin-top: 20px;
 }
+
+file-import-container {
+            margin-top: 20px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #drop-zone {
+            border: 2px dashed #cccccc;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-bottom: 20px;
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        #drop-zone.dragover {
+            border-color: #007bff;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        #import-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        #import-btn:hover {
+            background-color: #0056b3;
+        }
+
+        #file-preview {
+            margin-top: 20px;
+            width: 100%;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 </style >
 
 <body>
@@ -155,7 +213,7 @@ tr:hover {
                 <button type="submit">搜索</button>
             </form>
         </div>
-        <h2>员工列表</h2>
+        <h2>员工薪资列表</h2>
         <table>
             <thead>
                 <tr>
@@ -200,6 +258,9 @@ tr:hover {
                         <a href="@Url.Action("AdminEdit", "Administrator", new { id = item.EmployeeId })">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
+                        <a href="@Url.Action("EmployeeLeave", "Administrator", new { id = item.EmployeeId })" onclick="return confirm('确定要删除此项吗？')">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
                     </td>
             </tr>
                     }
@@ -214,8 +275,8 @@ tr:hover {
         </table>
         <div class="buttons-container" style="text-align: center; margin-top: 20px;">
             <a asp-action="AddEmployee" class="btn btn-primary">添加员工</a>
-            <button type="button">编辑</button>
-            <button type="button">删除</button>
-        </div>
+            <a asp-action="ImportEmployee" class="btn btn-primary">批量导入员工信息</a>
+            </div>
     </div>
+
 </body>
