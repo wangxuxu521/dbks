@@ -2,5 +2,39 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "查询";
 }
+@model IEnumerable<dbks.Models.Employee>
+<h1>Administrator Search</h1>
 
+<form asp-controller="Administrator" asp-action="AdministratorUser3" method="get">
+    <p>
+        Name: <input type="text" name="searchString" />
+        <input type="submit" value="Search" />
+    </p>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmployeeId)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmployeeId)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
