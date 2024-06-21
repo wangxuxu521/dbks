@@ -10,7 +10,6 @@
 </head>
 
 
-<div class="tab-content">
     <h1>查询</h1>
     <div class="container mt-5">
         <form asp-controller="Administrator" asp-action="AdministratorUser3" method="get" class="needs-validation">
@@ -21,13 +20,13 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="font-weight-bold" for="employId">Employee ID:</label>
-                    <input class="form-control form-control-lg" type="text" id="employId" name="employId" >
+                    <input class="form-control form-control-lg" type="text" id="employId" name="employId">
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="font-weight-bold" for="deptId">Dept ID:</label>
-                    <input class="form-control form-control-lg" type="text" id="deptId" name="deptId" >
+                    <input class="form-control form-control-lg" type="text" id="deptId" name="deptId">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="font-weight-bold" for="position">Position:</label>
@@ -38,6 +37,7 @@
         </form>
     </div>
     <h2>员工列表</h2>
+<div class="table-container">
     <table class="table">
         <thead>
             <tr>
@@ -91,7 +91,6 @@
             }
         </tbody>
     </table>
-
 </div>
 
 
