@@ -20,3 +20,193 @@ html {
 body {
   margin-bottom: 60px;
 }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #333;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+}
+
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        padding: 10px;
+        margin: 5px 0;
+        background-color: #444;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+        .sidebar a:hover {
+            background-color: #555;
+        }
+
+.content {
+    margin-left: 220px; /* Space for the sidebar */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-container {
+    margin-bottom: 20px;
+}
+
+    .search-container input[type="text"] {
+        padding: 10px;
+        width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .search-container button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .search-container button:hover {
+            background-color: #45a049;
+        }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: white;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+    position: sticky;
+    top: 0;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+    .buttons-container button {
+        padding: 10px 20px;
+        border: none;
+        margin-left: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .buttons-container button:hover {
+            background-color: #45a049;
+        }
+
+/* Responsive table */
+.content {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%; /* 或者你希望的任何宽度 */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 垂直居中内容 */
+}
+
+    /* 确保表格在内容区域中居中 */
+    .content table {
+        margin: 0 auto;
+    }
+
+/* 确保按钮在内容区域中居中 */
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+a {
+    color: #0077cc;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+}
+
+.content {
+    width: 80%;
+    margin: 0 auto;
+    /* 其他样式属性 */
+}
