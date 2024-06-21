@@ -28,7 +28,7 @@ public partial class DbksContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("persist security info=True;data source=localhost;port=3306;initial catalog=dbks;user id=root;password=123456;character set=utf8;allow zero datetime=true;convert zero datetime=true;pooling=true;maximumpoolsize=3000", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.29-mysql"));
+        => optionsBuilder.UseMySql("persist security info=True;data source=localhost;port=3306;initial catalog=dbks;user id=root;password=tfzz5255;character set=utf8;allow zero datetime=true;convert zero datetime=true;pooling=true;maximumpoolsize=3000", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.42-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

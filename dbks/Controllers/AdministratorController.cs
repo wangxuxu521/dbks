@@ -386,6 +386,21 @@ namespace dbks.Controllers
             return View();
         }
 
+        public async Task<IActionResult> AdministratorUser3(string searchString)
+        {
+            using (var context = new DbksContext())
+            {
+                var employees = from a in context.Employees
+                                     select a;
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    employees = employees.Where(s => s.Name.Contains(searchString));
+                }
+
+                return View(await employees.ToListAsync());
+            }
+        }
     }
 
                 
