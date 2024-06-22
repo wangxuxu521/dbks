@@ -357,6 +357,10 @@ namespace dbks.Controllers
         }
 
 
+
+
+ 
+  
         public IActionResult LoginUser(Administrator admin)
         {
             using (var db = new DbksContext())
@@ -381,20 +385,41 @@ namespace dbks.Controllers
             return View();
         }
 
-        public async Task<IActionResult> AdministratorUser3(string searchString)
+        public async Task<IActionResult> AdministratorUser3(string name,string employId,string position,string deptId)
         {
             using (var context = new DbksContext())
             {
-                var employees = from a in context.Employees
-                                     select a;
+                // 初始化查询，选择所有员工，并预先加载相关的薪资和部门信息
+                var employees = context.Employees
+                    .Include(e => e.Salary)
+                    .Include(e => e.Dept) // 假设Employee模型中有Department导航属性
+                    .Include(e => e.Position) // 假设Employee模型中有Position导航属性
+                    .AsQueryable();
 
-                if (!string.IsNullOrEmpty(searchString))
+                // 如果搜索字符串不为空或null，则添加过滤条件
+
+                if (!string.IsNullOrEmpty(name))
                 {
-                    employees = employees.Where(s => s.Name.Contains(searchString));
+                    employees = employees.Where(s => s.Name.Contains(name));
+
+                }
+                if (!string.IsNullOrEmpty(employId))
+                {
+                    employees = employees.Where(s => s.EmployeeId.Contains(employId));
+                }
+                if (!string.IsNullOrEmpty(position))
+                {
+                    employees = employees.Where(s => s.Position.PositionId.Contains(position));
+                }
+                if (!string.IsNullOrEmpty(deptId))
+                {
+                    employees = employees.Where(s => s.Dept.DeptId.Contains(deptId));
                 }
 
                 return View(await employees.ToListAsync());
+
             }
+            
         }
     }
 

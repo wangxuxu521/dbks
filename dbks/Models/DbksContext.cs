@@ -28,7 +28,7 @@ public partial class DbksContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("persist security info=True;data source=localhost;port=3306;initial catalog=dbks;user id=root;password=123456;character set=utf8;allow zero datetime=true;convert zero datetime=true;pooling=true;maximumpoolsize=3000", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.29-mysql"));
+        => optionsBuilder.UseMySql("persist security info=True;data source=localhost;port=3306;initial catalog=dbks;user id=root;password=tfzz5255;character set=utf8;allow zero datetime=true;convert zero datetime=true;pooling=true;maximumpoolsize=3000", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.42-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -80,6 +80,8 @@ public partial class DbksContext : DbContext
 
             entity.HasIndex(e => e.SalaryId, "E_Salary");
 
+            entity.HasIndex(e => new { e.SalaryId, e.OnJobData }, "E_SalaryandPayDate");
+
             entity.Property(e => e.EmployeeId)
                 .HasMaxLength(20)
                 .HasColumnName("EmployeeID");
@@ -115,9 +117,9 @@ public partial class DbksContext : DbContext
                 .HasConstraintName("E_Posit");
 
             entity.HasOne(d => d.Salary).WithMany(p => p.Employees)
-                .HasForeignKey(d => d.SalaryId)
+                .HasForeignKey(d => new { d.SalaryId, d.OnJobData })
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("E_Salary");
+                .HasConstraintName("E_SalaryandPayDate");
         });
 
         modelBuilder.Entity<Position>(entity =>
@@ -134,7 +136,9 @@ public partial class DbksContext : DbContext
 
         modelBuilder.Entity<Salary>(entity =>
         {
-            entity.HasKey(e => e.SalaryId).HasName("PRIMARY");
+            entity.HasKey(e => new { e.SalaryId, e.PayDate })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
             entity.ToTable("salary");
 
@@ -145,13 +149,15 @@ public partial class DbksContext : DbContext
                 .HasPrecision(10)
                 .HasColumnName("Basic_salary");
             entity.Property(e => e.Bonus).HasPrecision(10);
-            entity.Property(e => e.PayDate).HasColumnType("datetime");
             entity.Property(e => e.PersonalIncome)
                 .HasPrecision(10)
                 .HasColumnName("Personal_income");
-            entity.Property(e => e.Salary1)
+            entity.Property(e => e.SalaryM)
                 .HasPrecision(10)
-                .HasColumnName("Salary");
+                .HasColumnName("Salary_M");
+            entity.Property(e => e.TaxRate)
+                .HasPrecision(10)
+                .HasColumnName("Tax_rate");
         });
 
         OnModelCreatingPartial(modelBuilder);
