@@ -5,6 +5,9 @@ using dbks.Controllers;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using System.Reflection.PortableExecutable;
+
+
+
 namespace dbks.Controllers
 {
     public class AdministratorController: Controller    
@@ -421,8 +424,56 @@ namespace dbks.Controllers
             }
             
         }
+        public IActionResult AdministratorUser4()
+        {
+            List<Department> departments = _dbContext.Departments.ToList();
+            List<Employee> employees = _dbContext.Employees.ToList();
+
+            ViewBag.Departments = departments;
+            ViewBag.Employees = employees;
+
+            return View();
+        }
+
+        public IActionResult GetStatistics(string department, string employeeId, DateOnly? startDate, DateOnly? endDate)
+        {
+            var employees = _dbContext.Employees
+                .Include(e => e.Dept)
+                .Include(e => e.Position)
+                .Include(e => e.Salary);
+
+            if (!string.IsNullOrEmpty(department))
+            {
+                employees = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<Employee, Salary?>)employees.Where(e => e.Dept.DeptId == department);
+            }
+
+            if (!string.IsNullOrEmpty(employeeId))
+            {
+                employees = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<Employee, Salary?>)employees.Where(e => e.EmployeeId == employeeId);
+            }
+
+            var results = employees.ToList(); // 将数据加载到内存中
+
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                results = results.Where(e =>
+                {
+                    if (e.Salary == null)
+                        return false; // 如果 e.Salary 为 null，则不满足条件
+                    return e.Salary.PayDate >= startDate && e.Salary.PayDate <= endDate;
+                }).ToList();
+            }
+
+           
+            return View(results);
+        }
+        
     }
+        
+
+}
+
+ 
 
                 
- }
 

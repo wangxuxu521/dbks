@@ -3,4 +3,34 @@
     ViewData["Title"] = "统计";
 }
 
+<h2>统计分析</h2>
+@model List<Employee>
+
+<form asp-controller="Administrator" asp-action="GetStatistics" method="post">
+    <label for="department">选择部门:</label>
+    <select id="department" name="department">
+        <option value="">所有部门</option>
+        @foreach (var dept in ViewBag.Departments)
+        {
+            <option value="@dept.DeptId">@dept.DeptName</option>
+        }
+    </select>
+
+    <label for="employee">选择员工:</label>
+    <select id="employee" name="employee">
+        <option value="">所有员工</option>
+        @foreach (var emp in ViewBag.Employees)
+        {
+            <option value="@emp.EmployeeId">@emp.Name</option>
+        }
+    </select>
+
+    <label for="startDate">开始日期:</label>
+    <input type="date" id="startDate" name="startDate" />
+
+    <label for="endDate">结束日期:</label>
+    <input type="date" id="endDate" name="endDate" />
+
+    <button type="submit">统计</button>
+</form>
 

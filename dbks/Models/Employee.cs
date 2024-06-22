@@ -38,4 +38,9 @@ public partial class Employee
     public virtual Position? Position { get; set; }
 
     public virtual Salary? Salary { get; set; }
+
+    internal object FirstOrDefault(Func<object, bool> value)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -4,13 +4,12 @@
 
 @model dbks.Models.Administrator
 
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"]</title>
+    <title>@ViewData["Title"] - 管理员登录</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -19,48 +18,77 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #f8f9fa;
             font-family: 'Arial', sans-serif;
         }
 
         .login-container {
             background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             width: 100%;
         }
 
             .login-container h2 {
-                margin-bottom: 20px;
+                text-align: center;
+                margin-bottom: 30px;
+                color: #34495e;
             }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
             .form-group label {
                 display: block;
-                margin-bottom: 5px;
+                margin-bottom: 10px;
+                color: #34495e;
             }
 
             .form-group input {
                 width: 100%;
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
+                padding: 12px;
+                border: 1px solid #ced4da;
+                border-radius: 6px;
+                font-size: 16px;
             }
 
             .form-group .error {
-                color: red;
-                font-size: 0.9em;
+                color: #dc3545;
+                font-size: 14px;
+                margin-top: 5px;
             }
-   </style>
+
+        .btn-custom {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            .btn-custom:hover {
+                background-color: #0056b3;
+            }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="login-container">
-        <h2></h2>
+        <h2>管理员登录</h2>
 
         <form action="/Administrator/LoginUser" method="post">
             <div class="form-group">
@@ -74,7 +102,7 @@
                 <span asp-validation-for="Administratorid" class="error"></span>
                 @if (ViewData["Message"] != null)
                 {
-                    <div style="color: red;">
+                    <div class="error-message">
                         @ViewData["Message"]
                     </div>
                 }
