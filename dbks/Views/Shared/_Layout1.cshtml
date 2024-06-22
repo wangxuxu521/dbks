@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] - 员工</title>
+    <title>Responsive Layout</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -13,23 +14,24 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+        <div class="sidebar">
+            <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link" href="/Employee/EmployeeUser">员工首页</a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="/Employee/EmployeeUser1">信息管理<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/Employee/EmployeeUser">员工端(Index/开始）</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/Employee/EmployeeUser2">薪资管理</a>
+                    <a class="nav-link" href="/Employee/EmployeeUser1">员工信息管理</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Employee/EmployeeUser2">员工薪资管理</a>
                 </li>
 
             </ul>
         </div>
+
     </nav>
 
-    <div class="container mt-4">
+    <div class="content">
         @RenderBody()
     </div>
     <div style="text-align: center; margin-top: 20px;">
