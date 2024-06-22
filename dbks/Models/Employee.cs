@@ -31,6 +31,8 @@ public partial class Employee
 
     public string? OnJob { get; set; }
 
+    public DateOnly? OnJobData { get; set; }
+
     public virtual Department? Dept { get; set; }
 
     public virtual Position? Position { get; set; }

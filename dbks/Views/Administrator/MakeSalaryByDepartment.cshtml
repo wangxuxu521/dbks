@@ -1,0 +1,43 @@
+﻿@model List<DepartmentSalaryViewModel>
+
+@{
+    ViewData["Title"] = "员工薪资一览表";
+}
+
+<h1>员工薪资一览表</h1>
+
+@foreach (var department in Model)
+{
+        <h2>@department.DeptName</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>EmployeeID</th>
+                    <th>Name</th>
+                    <th>PositionID</th>
+                    <th>SalaryID</th>
+                    <th>Salary_M</th>
+                    <th>Basic_salary</th>
+                    <th>Personal_income</th>
+                    <th>Bonus</th>
+                    <th>PayDate</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var employee in department.Employees)
+            {
+                        <tr>
+                            <td>@employee.EmployeeID</td>
+                            <td>@employee.Name</td>
+                            <td>@employee.PositionID</td>
+                            <td>@employee.SalaryID</td>
+                            <td>@employee.Salary_M</td>
+                            <td>@employee.Basic_salary</td>
+                            <td>@employee.Personal_income</td>
+                            <td>@employee.Bonus</td>
+                            <td>@employee.PayDate.ToString("yyyy-MM-dd")</td>
+                        </tr>
+            }
+            </tbody>
+        </table>
+}

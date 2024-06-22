@@ -1,0 +1,31 @@
+﻿@model Salary
+
+@{
+    ViewData["Title"] = "Add Salary";
+}
+
+<h2>Add Salary</h2>
+
+<form asp-action="AddSalary" method="post">
+    <div class="form-group">
+        <label asp-for="SalaryId"></label>
+        <input asp-for="SalaryId" class="form-control" />
+        <span asp-validation-for="SalaryId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="BasicSalary"></label>
+        <input asp-for="BasicSalary" class="form-control" />
+        <span asp-validation-for="BasicSalary" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Bonus"></label>
+        <input asp-for="Bonus" class="form-control" />
+        <span asp-validation-for="Bonus" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PayDate"></label>
+        <input asp-for="PayDate" class="form-control" />
+        <span asp-validation-for="PayDate" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Salary</button>
+</form>

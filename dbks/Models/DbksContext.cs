@@ -80,6 +80,8 @@ public partial class DbksContext : DbContext
 
             entity.HasIndex(e => e.SalaryId, "E_Salary");
 
+            entity.HasIndex(e => new { e.SalaryId, e.OnJobData }, "E_SalaryandPayDate");
+
             entity.Property(e => e.EmployeeId)
                 .HasMaxLength(20)
                 .HasColumnName("EmployeeID");
@@ -115,9 +117,9 @@ public partial class DbksContext : DbContext
                 .HasConstraintName("E_Posit");
 
             entity.HasOne(d => d.Salary).WithMany(p => p.Employees)
-                .HasForeignKey(d => d.SalaryId)
+                .HasForeignKey(d => new { d.SalaryId, d.OnJobData })
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("E_Salary");
+                .HasConstraintName("E_SalaryandPayDate");
         });
 
         modelBuilder.Entity<Position>(entity =>
@@ -134,7 +136,9 @@ public partial class DbksContext : DbContext
 
         modelBuilder.Entity<Salary>(entity =>
         {
-            entity.HasKey(e => e.SalaryId).HasName("PRIMARY");
+            entity.HasKey(e => new { e.SalaryId, e.PayDate })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
             entity.ToTable("salary");
 
@@ -145,13 +149,15 @@ public partial class DbksContext : DbContext
                 .HasPrecision(10)
                 .HasColumnName("Basic_salary");
             entity.Property(e => e.Bonus).HasPrecision(10);
-            entity.Property(e => e.PayDate).HasColumnType("datetime");
             entity.Property(e => e.PersonalIncome)
                 .HasPrecision(10)
                 .HasColumnName("Personal_income");
-            entity.Property(e => e.Salary1)
+            entity.Property(e => e.SalaryM)
                 .HasPrecision(10)
-                .HasColumnName("Salary");
+                .HasColumnName("Salary_M");
+            entity.Property(e => e.TaxRate)
+                .HasPrecision(10)
+                .HasColumnName("Tax_rate");
         });
 
         OnModelCreatingPartial(modelBuilder);
