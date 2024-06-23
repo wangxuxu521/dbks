@@ -24,6 +24,7 @@
                     <th>员工ID</th>
                     <th>姓名</th>
                     <th>薪资ID</th>
+                    <th>实发工资</th>
                     <th>基础工资</th>
                     <th>个人所得税</th>
                     <th>奖金</th>
@@ -43,13 +44,14 @@
                                             <td>@employee.EmployeeId</td>
                                             <td>@employee.Name</td>
                                             <td>@salary.SalaryId</td> <!-- 显示薪资ID -->
+                                            <td>@salary.SalaryM</td> <!-- 显示薪资ID -->
                                             <td>@salary.BasicSalary</td> <!-- 显示基础工资 -->
                                             <td>@salary.PersonalIncome</td>  <!-- 显示个人税 -->
                                             <td>@salary.Bonus</td> <!-- 显示奖金 -->
                                             <td>@salary.PayDate</td> <!-- 显示日期 -->
                                             <td>@salary.TaxRate</td> <!-- 显示税率 -->
                                             <td>
-                                                <a href="@Url.Action("AddSalary", "Administrator", new { id = employee.EmployeeId })">
+                                                            <a href="@Url.Action("EditSalary", "Administrator", new { id = employee.EmployeeId })">
                                                     <i class="fas fa-pencil-alt"></i>
                                                 </a>
                                             </td>
