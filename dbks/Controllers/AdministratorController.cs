@@ -339,7 +339,6 @@ namespace dbks.Controllers
             {
                 // 初始化查询，选择所有员工，并预先加载相关的薪资和部门信息
                 var employees = context.Employees
-                    .Include(e => e.Salary)
                     .Include(e => e.Dept) // 假设Employee模型中有Department导航属性
                     .Include(e => e.Position) // 假设Employee模型中有Position导航属性
                     .AsQueryable();
@@ -351,20 +350,187 @@ namespace dbks.Controllers
                     employees = employees.Where(e => e.Name.Contains(searchString));
                 }
 
-                // 将过滤后的员工列表转换为List，并异步加载数据
-                var employeeList = await employees.ToListAsync();
+                // 使用连表查询获取员工和薪资信息，并按员工分组
+                var employeeSalaries = await (from e in employees
+                                              join s in context.Salaries on e.SalaryId equals s.SalaryId into salariesGroup
+                                              from s in salariesGroup.DefaultIfEmpty()
+                                              group new { e, s } by new { e.EmployeeId, e.Name } into g
+                                              select new EmployeeSalaryViewModel
+                                              {
+                                                  EmployeeId = g.Key.EmployeeId,
+                                                  Name = g.Key.Name,
+                                                  Salaries = g.Where(x => x.s != null).Select(x => new SalaryViewModel
+                                                  {
+                                                      SalaryId = x.s.SalaryId,
+                                                      BasicSalary = x.s.BasicSalary,
+                                                      PersonalIncome = x.s.PersonalIncome,
+                                                      Bonus = x.s.Bonus,
+                                                      PayDate = x.s.PayDate,
+                                                      TaxRate = x.s.TaxRate
+                                                  }).ToList()
+                                              }).ToListAsync();
 
-                // 将员工列表传递给视图进行显示
-                return View(employeeList);
+                // 将员工薪资列表传递给视图进行显示
+                return View(employeeSalaries);
             }
         }
 
+        public IActionResult AddSalary()
+        {
+            return View();
+        }
+
+        // POST: Salary/AddSalary
+        [HttpPost]
+        public async Task<IActionResult> AddSalary(Salary salary)
+        {
+            if (ModelState.IsValid)
+            {
+                // 检查SalaryID是否在Employee表中存在
+                if (!_dbContext.Employees.Any(e => e.SalaryId == salary.SalaryId))
+                {
+                    ModelState.AddModelError("SalaryId", "SalaryID does not exist in the Employee table.");
+                    return View(salary);
+                }
+
+                // 保存工资信息到数据库
+                _dbContext.Salaries.Add(salary);
+                await _dbContext.SaveChangesAsync();
+                return RedirectToAction("Index"); // 或者返回一个成功消息视图
+            }
+
+            // 如果模型状态无效，重新显示表单并显示错误消息
+            return View(salary);
+        }
+        public ActionResult ImportSalary()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ImportSalary(IFormFile file)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            if (file == null || file.Length == 0)
+                return Content("File not selected");
+
+            using (var stream = new MemoryStream())
+            {
+                file.CopyTo(stream);
+                var salaries = new List<Salary>();
+
+                try
+                {
+                    using (var package = new ExcelPackage(stream))
+                    {
+                        var worksheet = package.Workbook.Worksheets[0];
+                        var rowCount = worksheet.Dimension.Rows;
+                        var requiredColumns = new[] { "SalaryID", "Basic_salary", "Bonus", "PayDate" };
+                        var headerRow = worksheet.Cells[1, 1, 1, worksheet.Dimension.Columns].Select(cell => cell.Text).ToArray();
+                        var columnIndices = requiredColumns.Select(col => Array.IndexOf(headerRow, col)).ToArray();
+
+                        if (columnIndices.Any(index => index == -1))
+                        {
+                            return Content("Missing required columns in the file.");
+                        }
+
+                        for (int row = 2; row <= rowCount; row++)
+                        {
+                            var salaryId = worksheet.Cells[row, columnIndices[0] + 1].Text.Trim();
+
+                            // 检查SalaryID是否在Employee表中存在
+                            if (!_dbContext.Employees.Any(e => e.SalaryId == salaryId))
+                            {
+                                continue; // 跳过此记录
+                            }
+
+                            var salary = new Salary();
+
+                            for (int i = 0; i < requiredColumns.Length; i++)
+                            {
+                                var cellValue = worksheet.Cells[row, columnIndices[i] + 1].Text.Trim();
+
+                                switch (requiredColumns[i])
+                                {
+                                    case "SalaryID":
+                                        salary.SalaryId = cellValue;
+                                        break;
+                                    case "Basic_salary":
+                                        if (decimal.TryParse(cellValue, out decimal basicSalary))
+                                            salary.BasicSalary = basicSalary;
+                                        break;
+                                    case "Bonus":
+                                        if (decimal.TryParse(cellValue, out decimal bonus))
+                                            salary.Bonus = bonus;
+                                        break;
+                                    case "PayDate":
+                                        if (DateOnly.TryParse(cellValue, out DateOnly payDate))
+                                            salary.PayDate = payDate;
+                                        break;
+                                }
+                            }
+
+                            salaries.Add(salary);
+                        }
+
+                        _dbContext.Salaries.AddRange(salaries);
+                        try
+                        {
+                            _dbContext.SaveChanges();
+                        }
+                        catch (DbUpdateException ex)
+                        {
+                            if (ex.InnerException != null)
+                            {
+                                return Content("Error importing file: " + ex.InnerException.Message);
+                            }
+                            else
+                            {
+                                return Content("Error importing file: " + ex.Message);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Content("Error importing file: " + ex.Message);
+                }
+            }
+
+            return RedirectToAction("AdministratorUser1", "Administrator");
+        }
+
+        public async Task<IActionResult> MakeSalaryByDepartment()
+        {
+            // 查询按部门分类的员工薪资信息
+            // 查询按部门分类的员工薪资信息
+            var salaryInfo = await _dbContext.Departments
+                .Include(d => d.Employees)
+                .ThenInclude(e => e.Salary)
+                .Select(d => new DepartmentSalaryViewModel
+                {
+                    DeptID = d.DeptId,
+                    DeptName = d.DeptName,
+                    Employees = d.Employees.Select(e => new EmployeeSalaryDetailsViewModel
+                    {
+                        EmployeeID = e.EmployeeId,
+                        Name = e.Name,
+                        PositionID = e.PositionId,
+                        SalaryID = e.SalaryId,
+                        Salary_M = e.Salary.SalaryM,
+                        Basic_salary = e.Salary.BasicSalary,
+                        Personal_income = e.Salary.PersonalIncome,
+                        Bonus = e.Salary.Bonus,
+                        PayDate = e.Salary.PayDate
+                    }).ToList()
+                }).ToListAsync();
 
 
+            return View(salaryInfo);
+        }
 
- 
-  
-        public IActionResult LoginUser(Administrator admin)
+    
+    public IActionResult LoginUser(Administrator admin)
         {
             using (var db = new DbksContext())
             {

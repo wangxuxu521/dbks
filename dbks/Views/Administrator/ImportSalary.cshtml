@@ -1,9 +1,8 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Excel Preview</title>
+    <title>Import Salary</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .table-responsive {
@@ -26,8 +25,8 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h2>Excel 文件预览</h2>
-        <form id="upload-form" method="post" enctype="multipart/form-data" action="/Administrator/ImportEmployee">
+        <h2>导入薪资数据</h2>
+        <form id="upload-form" method="post" enctype="multipart/form-data" action="/Administrator/ImportSalary">
             <input type="file" id="file-input" name="file" class="form-control mb-3" required />
             <button type="button" id="select-all-btn" class="btn btn-primary mb-3">全选</button>
             <button type="button" id="confirm-btn" class="btn btn-success mb-3">确认</button>
@@ -42,7 +41,7 @@
         document.getElementById('select-all-btn').addEventListener('click', selectAllColumns, false);
         document.getElementById('confirm-btn').addEventListener('click', confirmSelection, false);
 
-        const requiredColumns = ['EmployeeId', 'IdNumber', 'Name', 'DeptId', 'PositionId', 'SalaryId', 'OnJob'];
+        const requiredColumns = ['SalaryID', 'Basic_salary', 'Bonus', 'PayDate'];
 
         function handleFile(event) {
             const file = event.target.files[0];
@@ -90,7 +89,7 @@
             table.appendChild(headerTr);
 
             // 添加数据行
-            json.slice(1).forEach(function(row) {
+json.slice(1).forEach(function(row) {
                 const tr = document.createElement('tr');
 
                 headerRow.forEach(function(header, index) {

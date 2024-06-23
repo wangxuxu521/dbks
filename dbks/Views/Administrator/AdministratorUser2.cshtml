@@ -3,15 +3,15 @@
     ViewData["Title"] = "员工薪资管理";
 }
 @using Microsoft.AspNetCore.Mvc.Localization
-@model List<Employee>
+@model List<EmployeeSalaryViewModel>
 <head>
     <!-- 其他头部内容 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
-    <div class="table-container">
-        <div class="container mt-5">
+    <div class="table-content">
+        <div class="search-container">
             <form asp-action="Index" method="get">
                 <input type="text" name="searchString" placeholder="搜索..." />
                 <button type="submit">搜索</button>
@@ -23,55 +23,52 @@
                 <tr>
                     <th>员工ID</th>
                     <th>姓名</th>
-                    <th>部门ID</th>
-                    <th>部门</th>
-                    <th>职位ID</th>
-                    <th>职位</th>
-                    <th>薪资ID</th>
                     <th>薪资ID</th>
                     <th>基础工资</th>
                     <th>个人所得税</th>
                     <th>奖金</th>
                     <th>日期</th>
+                    <th>税率</th>
+                    <th>操作</th>
                 </tr>
-
             </thead>
             <tbody>
                 @if (Model != null)
                 {
-                    @foreach (var item in Model)
+                    foreach (var employee in Model)
                     {
-                            <tr>
-                                <td>@item.EmployeeId</td>
-                                <td>@item.Name</td>
-                                <td>@item.DeptId</td> <!-- 显示部门ID -->
-                                <td>@item.Dept?.DeptName</td> <!-- 显示部门名称 -->
-                                <td>@item.PositionId</td> <!-- 显示职位ID -->
-                                <td>@item.Position?.PositionName</td> <!-- 显示职位名称 -->
-                                <td>@item.Salary?.SalaryId</td> <!-- 显示薪资 -->
-                                <td>@item.Salary?.SalaryM</td> <!-- 显示薪资 -->
-                                <td>@item.Salary?.BasicSalary</td> <!-- 显示基础工资 -->
-                                <td>@item.Salary?.PersonalIncome</td>  <!-- 显示个人税 -->
-                                <td>@item.Salary?.Bonus</td> <!-- 显示性别 -->
-                                <td>@item.Salary?.PayDate</td> <!-- 显示电话 -->
-                            <td>
-                                <a href="@Url.Action("AdminEdit", "Administrator", new { id = item.EmployeeId })">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </a>
-                            </td>
-                    </tr>
+                        foreach (var salary in employee.Salaries)
+                        {
+                                        <tr>
+                                            <td>@employee.EmployeeId</td>
+                                            <td>@employee.Name</td>
+                                            <td>@salary.SalaryId</td> <!-- 显示薪资ID -->
+                                            <td>@salary.BasicSalary</td> <!-- 显示基础工资 -->
+                                            <td>@salary.PersonalIncome</td>  <!-- 显示个人税 -->
+                                            <td>@salary.Bonus</td> <!-- 显示奖金 -->
+                                            <td>@salary.PayDate</td> <!-- 显示日期 -->
+                                            <td>@salary.TaxRate</td> <!-- 显示税率 -->
+                                            <td>
+                                                <a href="@Url.Action("AddSalary", "Administrator", new { id = employee.EmployeeId })">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                        }
                     }
                 }
                 else
                 {
-                            <tr>
-                                <td colspan="14">无数据</td>
-                            </tr>
+                        <tr>
+                            <td colspan="9">无数据</td>
+                        </tr>
                 }
             </tbody>
         </table>
         <div class="buttons-container" style="text-align: center; margin-top: 20px;">
-            <a asp-action="AddEmployee" class="btn btn-primary">添加员工</a>
+            <a asp-action="AddSalary" class="btn btn-primary">添加薪资记录</a>
+            <a asp-action="ImportSalary" class="btn btn-primary">导入薪资记录</a>
+            <a asp-action="MakeSalaryByDepartment" class="btn btn-primary">部门薪资表</a>
         </div>
     </div>
 </body>
