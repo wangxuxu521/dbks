@@ -362,6 +362,7 @@ namespace dbks.Controllers
                                                   Salaries = g.Where(x => x.s != null).Select(x => new SalaryViewModel
                                                   {
                                                       SalaryId = x.s.SalaryId,
+                                                      SalaryM = x.s.SalaryM,
                                                       BasicSalary = x.s.BasicSalary,
                                                       PersonalIncome = x.s.PersonalIncome,
                                                       Bonus = x.s.Bonus,
@@ -396,11 +397,43 @@ namespace dbks.Controllers
                 // 保存工资信息到数据库
                 _dbContext.Salaries.Add(salary);
                 await _dbContext.SaveChangesAsync();
-                return RedirectToAction("Index"); // 或者返回一个成功消息视图
+                return RedirectToAction("AdministratorUser2", "Administrator");
             }
 
             // 如果模型状态无效，重新显示表单并显示错误消息
             return View(salary);
+        }
+        public ActionResult EditSalary(string id)
+        {
+            var salary = _dbContext.Salaries.FirstOrDefault(e => e.SalaryId == id);
+
+            if (salary == null)
+            {
+                return RedirectToAction("Index", "Home"); // 或者返回一个错误视图
+            }
+
+            // 获取所有职位和部门数据
+            ViewBag.Positions = _dbContext.Positions.ToList();
+
+            // 将员工信息传递给视图
+            return View(salary);
+        }
+
+        [HttpPost]
+        public ActionResult EditSalary(Salary updatedsalary)
+        {
+            // 处理表单提交，更新员工信息
+            if (ModelState.IsValid)
+            {
+                _dbContext.Salaries.Update(updatedsalary);
+                _dbContext.SaveChanges();
+                return RedirectToAction("AdministratorUser2", "Administrator"); // 或者返回到员工列表视图
+            }
+
+            // 如果模型状态无效，重新加载数据并返回编辑视图
+            ViewBag.Positions = _dbContext.Positions.ToList();
+            ViewBag.Departments = _dbContext.Departments.ToList();
+            return View(updatedsalary);
         }
         public ActionResult ImportSalary()
         {
