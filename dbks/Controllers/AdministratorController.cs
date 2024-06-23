@@ -46,7 +46,7 @@ namespace dbks.Controllers
             {
                 // 初始化查询，选择所有员工，并预先加载相关的薪资和部门信息
                 var employees = context.Employees
-                    .Include(e => e.Salary)
+                    .Include(e => e.Salaries)
                     .Include(e => e.Dept) // 假设Employee模型中有Department导航属性
                     .Include(e => e.Position) // 假设Employee模型中有Position导航属性
                     .AsQueryable();
@@ -506,7 +506,7 @@ namespace dbks.Controllers
             // 查询按部门分类的员工薪资信息
             var salaryInfo = await _dbContext.Departments
                 .Include(d => d.Employees)
-                .ThenInclude(e => e.Salary)
+                .ThenInclude(e => e.Salaries)
                 .Select(d => new DepartmentSalaryViewModel
                 {
                     DeptID = d.DeptId,
@@ -517,11 +517,11 @@ namespace dbks.Controllers
                         Name = e.Name,
                         PositionID = e.PositionId,
                         SalaryID = e.SalaryId,
-                        Salary_M = e.Salary.SalaryM,
-                        Basic_salary = e.Salary.BasicSalary,
-                        Personal_income = e.Salary.PersonalIncome,
-                        Bonus = e.Salary.Bonus,
-                        PayDate = e.Salary.PayDate
+                        Salary_M = e.Salaries.SalaryM,
+                        Basic_salary = e.Salaries.BasicSalary,
+                        Personal_income = e.Salaries.PersonalIncome,
+                        Bonus = e.Salaries.Bonus,
+                        PayDate = e.Salaries.PayDate
                     }).ToList()
                 }).ToListAsync();
 
@@ -560,7 +560,7 @@ namespace dbks.Controllers
             {
                 // 初始化查询，选择所有员工，并预先加载相关的薪资和部门信息
                 var employees = context.Employees
-                    .Include(e => e.Salary)
+                    .Include(e => e.Salaries)
                     .Include(e => e.Dept) // 假设Employee模型中有Department导航属性
                     .Include(e => e.Position) // 假设Employee模型中有Position导航属性
                     .AsQueryable();
@@ -606,7 +606,7 @@ namespace dbks.Controllers
             var employees = _dbContext.Employees
                 .Include(e => e.Dept)
                 .Include(e => e.Position)
-                .Include(e => e.Salary);
+                .Include(e => e.Salaries);
 
             if (!string.IsNullOrEmpty(department))
             {
@@ -624,9 +624,9 @@ namespace dbks.Controllers
             {
                 results = results.Where(e =>
                 {
-                    if (e.Salary == null)
+                    if (e.Salaries == null)
                         return false; // 如果 e.Salary 为 null，则不满足条件
-                    return e.Salary.PayDate >= startDate && e.Salary.PayDate <= endDate;
+                    return e.Salaries.PayDate >= startDate && e.Salaries.PayDate <= endDate;
                 }).ToList();
             }
 

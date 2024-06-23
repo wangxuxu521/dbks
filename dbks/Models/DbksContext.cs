@@ -116,7 +116,7 @@ public partial class DbksContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("E_Posit");
 
-            entity.HasOne(d => d.Salary).WithMany(p => p.Employees)
+            entity.HasOne(d => d.Salaries).WithMany(p => p.Employees)
                 .HasForeignKey(d => new { d.SalaryId, d.OnJobData })
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("E_SalaryandPayDate");

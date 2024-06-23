@@ -1,56 +1,54 @@
-﻿@{
-    Layout = "~/Views/Shared/_Layout1.cshtml";
-    ViewData["Title"] = "薪资查询";
+﻿
+@model List<EmployeeSalaryViewModel>
+@{
+    ViewData["Title"] = "员工薪资详情";
 }
-@model List<Employee>
-<h1>薪资查询</h1>
-<div>
-    <!-- 统计结果将显示在这里 -->
-    <h3>薪资统计结果</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>员工ID</th>
-                <th>姓名</th>
-                <th>部门ID</th>
-                <th>部门</th>
-                <th>职位ID</th>
-                <th>职位</th>
-                <th>薪资ID</th>
-                <th>薪资ID</th>
-                <th>基础工资</th>
-                <th>个人所得税</th>
-                <th>奖金</th>
-                <th>日期</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null)
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>员工ID</th>
+            <th>姓名</th>
+            <th>薪资ID</th>
+            <th>基础工资</th>
+            <th>个人所得税</th>
+            <th>奖金</th>
+            <th>日期</th>
+            <th>税率</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var employee in Model)
             {
-                foreach (var item in Model)
+                foreach (var salary in employee.Salaries)
                 {
                     <tr>
-                        <td>@item.EmployeeId</td>
-                        <td>@item.Name</td>
-                        <td>@item.DeptId</td> <!-- 显示部门ID -->
-                        <td>@item.Dept?.DeptName</td> <!-- 显示部门名称 -->
-                        <td>@item.PositionId</td> <!-- 显示职位ID -->
-                        <td>@item.Position?.PositionName</td> <!-- 显示职位名称 -->
-                        <td>@item.Salary?.SalaryId</td> <!-- 显示薪资 -->
-                        <td>@item.Salary?.SalaryM</td> <!-- 显示薪资 -->
-                        <td>@item.Salary?.BasicSalary</td> <!-- 显示基础工资 -->
-                        <td>@item.Salary?.PersonalIncome</td>  <!-- 显示个人税 -->
-                        <td>@item.Salary?.Bonus</td> <!-- 显示性别 -->
-                        <td>@item.Salary?.PayDate</td> <!-- 显示电话 -->
+                        <td>@employee.EmployeeId</td>
+                        <td>@employee.Name</td>
+                        <td>@salary.SalaryId</td> <!-- 显示薪资ID -->
+                        <td>@salary.BasicSalary</td> <!-- 显示基础工资 -->
+                        <td>@salary.PersonalIncome</td>  <!-- 显示个人税 -->
+                        <td>@salary.Bonus</td> <!-- 显示奖金 -->
+                        <td>@salary.PayDate</td> <!-- 显示日期 -->
+                        <td>@salary.TaxRate</td> <!-- 显示税率 -->
                     </tr>
                 }
             }
-        </tbody>
-    </table>
-    <img src="@Url.Action("GenerateSalaryChart", "ControllerName")" alt="薪资统计图表" />
-    <div style="text-align: center; margin-top: 20px;">
-        <button type="button" class="btn btn-primary" onclick="history.back()">返回</button>
-    </div>
+        }
+        else
+        {
+            <tr>
+                <td colspan="9">无数据</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Index" class="btn btn-primary">返回</a>
 </div>
-
-

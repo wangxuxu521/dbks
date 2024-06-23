@@ -23,7 +23,7 @@ namespace dbks.Controllers
             using (var dbksContext = new DbksContext())
             {
                 var employees = dbksContext.Employees
-                    .Include(e => e.Salary)
+                    .Include(e => e.Salaries)
                     .Include(e => e.Dept) // 假设Employee模型中有Department导航属性
                     .Include(e => e.Position) // 假设Employee模型中有Position导航属性
                     .AsQueryable();
@@ -113,30 +113,33 @@ namespace dbks.Controllers
             return View();
         }
 
-        public IActionResult EmployeeUser2()
+        public async Task<IActionResult> EmployeeUser2(string employeeId)
         {
-            var employeeId = HttpContext.Session.GetString("EmployeeId");
-
-            // 从数据库中获取员工信息和薪资信息
-            var employees = _dbContext.Employees
-                .Include(e => e.Salary)
-                .Include(e => e.Dept)
-                .Include(e => e.Position)
+            // 假设EmployeeSalaryViewModel是一个视图模型，它包含了员工ID和薪资信息
+            var viewModel = await _dbContext.Employees
                 .Where(e => e.EmployeeId == employeeId)
-                .ToList();
+                .Select(e => new EmployeeSalaryViewModel
+                {
+                    EmployeeId = e.EmployeeId,
+                    Salaries = e.Salaries.Select(s => new SalaryViewModel
+                    {
+                        SalaryId = s.SalaryId,
+                        BasicSalary = s.BasicSalary,
+                        PersonalIncome = s.PersonalIncome,
+                        Bonus = s.Bonus,
+                        PayDate = s.PayDate
+                    }).ToList()
+                })
+                .ToListAsync();
 
+            if (viewModel == null)
+            {
+                return NotFound(); // 如果找不到员工，返回404
+            }
 
-            //var employees = _dbContext.Employees
-            //    .Include(e => e.Dept)
-            //    .Include(e => e.Position)
-            //    .Include(e => e.Salary)
-            //    .Where(e => e.EmployeeId == employeeId)
-            //    .ToList();
-            
-
-
-
-            return View(employees);
+            return View(viewModel);
         }
     }
+    }
 }
+
